@@ -9,7 +9,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "TPCircularBuffer.h"
 
-#define kMaxBufferSize 32767
+#define kMaxBufferSize 96000
 
 uint8_t bufferForOutput[kMaxBufferSize];
 uint8_t bufferForInput[kMaxBufferSize];
@@ -69,19 +69,6 @@ static void writePCM(uint8_t * pcm, int length) {
     bool bRet = TPCircularBufferProduceBytes(&_buffer, audioData, length);
     if (bRet) {
         return;
-    }
-    TPCircularBufferConsume(&_buffer, length);
-    TPCircularBufferProduceBytes(&_buffer, audioData, length);
-    /*
-     由于TPCircularBuffer 内部的长度是内存分页的大小，大概为4096。会一直写，写到4096的大小。
-     导致 buffer 过大, 延迟变高
-     手动控制 buffer 的大小不超过 kMaxBufferSize
-     */
-    uint32_t totalDataLength;
-    TPCircularBufferTail(&_buffer, &totalDataLength);
-    if (totalDataLength > kMaxBufferSize) {
-        uint32_t shouldConsumeSize = totalDataLength - kMaxBufferSize;
-        TPCircularBufferConsume(&_buffer, shouldConsumeSize);
     }
 }
 

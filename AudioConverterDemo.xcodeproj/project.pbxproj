@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09A7B4317E1D30EACBE497A4 /* Pods_AudioConverterDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDD97A79855A95739F1230C3 /* Pods_AudioConverterDemo.framework */; };
 		8609A3122940D232008531BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8609A3112940D232008531BC /* AppDelegate.swift */; };
 		8609A3142940D232008531BC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8609A3132940D232008531BC /* SceneDelegate.swift */; };
 		8609A3162940D232008531BC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8609A3152940D232008531BC /* ViewController.swift */; };
@@ -14,11 +15,11 @@
 		8609A31B2940D233008531BC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8609A31A2940D233008531BC /* Assets.xcassets */; };
 		8609A31E2940D233008531BC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8609A31C2940D233008531BC /* LaunchScreen.storyboard */; };
 		8609A32A2940D253008531BC /* TSAudioConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8609A3262940D252008531BC /* TSAudioConverter.m */; };
-		8609A32B2940D253008531BC /* TPCircularBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 8609A3272940D252008531BC /* TPCircularBuffer.c */; };
 		8609A32E2940D32A008531BC /* TSAudioHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8609A32C2940D32A008531BC /* TSAudioHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		14D4F41E2388EF6680A26FE5 /* Pods-AudioConverterDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AudioConverterDemo.release.xcconfig"; path = "Target Support Files/Pods-AudioConverterDemo/Pods-AudioConverterDemo.release.xcconfig"; sourceTree = "<group>"; };
 		8609A30E2940D232008531BC /* AudioConverterDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioConverterDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8609A3112940D232008531BC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8609A3132940D232008531BC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -29,11 +30,11 @@
 		8609A31F2940D233008531BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8609A3252940D252008531BC /* AudioConverterDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AudioConverterDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		8609A3262940D252008531BC /* TSAudioConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAudioConverter.m; sourceTree = "<group>"; };
-		8609A3272940D252008531BC /* TPCircularBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TPCircularBuffer.c; sourceTree = "<group>"; };
-		8609A3282940D253008531BC /* TPCircularBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPCircularBuffer.h; sourceTree = "<group>"; };
 		8609A3292940D253008531BC /* TSAudioConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAudioConverter.h; sourceTree = "<group>"; };
 		8609A32C2940D32A008531BC /* TSAudioHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAudioHandler.m; sourceTree = "<group>"; };
 		8609A32D2940D32A008531BC /* TSAudioHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAudioHandler.h; sourceTree = "<group>"; };
+		F7D5386D1CB12B2A3A0F93C5 /* Pods-AudioConverterDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AudioConverterDemo.debug.xcconfig"; path = "Target Support Files/Pods-AudioConverterDemo/Pods-AudioConverterDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		FDD97A79855A95739F1230C3 /* Pods_AudioConverterDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AudioConverterDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,17 +42,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09A7B4317E1D30EACBE497A4 /* Pods_AudioConverterDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4220D6D14608E39EBBC7EE63 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F7D5386D1CB12B2A3A0F93C5 /* Pods-AudioConverterDemo.debug.xcconfig */,
+				14D4F41E2388EF6680A26FE5 /* Pods-AudioConverterDemo.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		8609A3052940D232008531BC = {
 			isa = PBXGroup;
 			children = (
 				8609A3102940D232008531BC /* AudioConverterDemo */,
 				8609A30F2940D232008531BC /* Products */,
+				4220D6D14608E39EBBC7EE63 /* Pods */,
+				DBCE9F20D7E6CA4CD0DF615B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -69,8 +83,6 @@
 				8609A3112940D232008531BC /* AppDelegate.swift */,
 				8609A3132940D232008531BC /* SceneDelegate.swift */,
 				8609A3152940D232008531BC /* ViewController.swift */,
-				8609A3272940D252008531BC /* TPCircularBuffer.c */,
-				8609A3282940D253008531BC /* TPCircularBuffer.h */,
 				8609A3292940D253008531BC /* TSAudioConverter.h */,
 				8609A3262940D252008531BC /* TSAudioConverter.m */,
 				8609A32D2940D32A008531BC /* TSAudioHandler.h */,
@@ -84,6 +96,14 @@
 			path = AudioConverterDemo;
 			sourceTree = "<group>";
 		};
+		DBCE9F20D7E6CA4CD0DF615B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FDD97A79855A95739F1230C3 /* Pods_AudioConverterDemo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -91,9 +111,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8609A3222940D233008531BC /* Build configuration list for PBXNativeTarget "AudioConverterDemo" */;
 			buildPhases = (
+				BDC1AAD5F3C795FA9AFD74F4 /* [CP] Check Pods Manifest.lock */,
 				8609A30A2940D232008531BC /* Sources */,
 				8609A30B2940D232008531BC /* Frameworks */,
 				8609A30C2940D232008531BC /* Resources */,
+				742A80471F7A1BF5C2BB8FF9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -151,6 +173,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		742A80471F7A1BF5C2BB8FF9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AudioConverterDemo/Pods-AudioConverterDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AudioConverterDemo/Pods-AudioConverterDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AudioConverterDemo/Pods-AudioConverterDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BDC1AAD5F3C795FA9AFD74F4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AudioConverterDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8609A30A2940D232008531BC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -160,7 +224,6 @@
 				8609A3122940D232008531BC /* AppDelegate.swift in Sources */,
 				8609A32E2940D32A008531BC /* TSAudioHandler.m in Sources */,
 				8609A32A2940D253008531BC /* TSAudioConverter.m in Sources */,
-				8609A32B2940D253008531BC /* TPCircularBuffer.c in Sources */,
 				8609A3142940D232008531BC /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,6 +366,7 @@
 		};
 		8609A3232940D233008531BC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F7D5386D1CB12B2A3A0F93C5 /* Pods-AudioConverterDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -336,6 +400,7 @@
 		};
 		8609A3242940D233008531BC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 14D4F41E2388EF6680A26FE5 /* Pods-AudioConverterDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

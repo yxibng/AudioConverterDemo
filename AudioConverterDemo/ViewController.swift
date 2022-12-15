@@ -53,11 +53,15 @@ class ViewController: UIViewController {
     }
 
     @IBAction func onClickStart(_ sender: Any) {
-        self.captureSession .startRunning()
+        DispatchQueue.global().async {
+            self.captureSession .startRunning()
+        }
     }
     
     @IBAction func onClickStop(_ sender: Any) {
-        self.captureSession.stopRunning()
+        DispatchQueue.global().async {
+            self.captureSession.stopRunning()
+        }
     }
 }
 
