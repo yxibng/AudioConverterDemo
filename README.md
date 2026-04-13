@@ -8,8 +8,6 @@ A Demo shows how to use iOS AudioConverterRef to resample PCM sampleRate.
 Will write pcm to file to check if resample success or not. Use ffplay to play pcm:
 
 ```
-# ffplay -ar <SampleRate> -ac 1 -f s16le -i <file.pcm>
-
 # play file named xx.pcm, samplerate = 16000, fmt = s16le
-ffplay -ar 16000 -ac 1 -f s16le -i xx.pcm
+ffplay -f s16le -ar 16000 -ch_layout mono -i xx.pcm
 ```

@@ -64,6 +64,30 @@ static AudioStreamBasicDescription makeStreamDescription(int channels, int sampl
     return asbd;
 }
 
+static void logPCMFormat(NSString *tag, const AudioStreamBasicDescription *asbd) {
+    if (!asbd) {
+        NSLog(@"[PCM] %@: <null>", tag);
+        return;
+    }
+
+    BOOL isFloat = (asbd->mFormatFlags & kAudioFormatFlagIsFloat) != 0;
+    BOOL isSignedInt = (asbd->mFormatFlags & kAudioFormatFlagIsSignedInteger) != 0;
+    BOOL isInterleaved = (asbd->mFormatFlags & kAudioFormatFlagIsNonInterleaved) == 0;
+
+    NSLog(@"[PCM] %@: sr=%.1f, ch=%u, bits=%u, bpf=%u, bpp=%u, fpp=%u, interleaved=%@, float=%@, signedInt=%@, flags=0x%08x",
+          tag,
+          asbd->mSampleRate,
+          (unsigned int)asbd->mChannelsPerFrame,
+          (unsigned int)asbd->mBitsPerChannel,
+          (unsigned int)asbd->mBytesPerFrame,
+          (unsigned int)asbd->mBytesPerPacket,
+          (unsigned int)asbd->mFramesPerPacket,
+          isInterleaved ? @"YES" : @"NO",
+          isFloat ? @"YES" : @"NO",
+          isSignedInt ? @"YES" : @"NO",
+          (unsigned int)asbd->mFormatFlags);
+}
+
 
 
 @interface TSAudioHandler()
@@ -108,6 +132,11 @@ static AudioStreamBasicDescription makeStreamDescription(int channels, int sampl
     
     CMAudioFormatDescriptionRef format = CMSampleBufferGetFormatDescription(sampleBuffer);
     const AudioStreamBasicDescription *description = CMAudioFormatDescriptionGetStreamBasicDescription(format);
+    static BOOL hasLoggedCaptureInput = NO;
+    if (!hasLoggedCaptureInput && description) {
+        hasLoggedCaptureInput = YES;
+        logPCMFormat(@"capture input", description);
+    }
     
     //多少个帧（双声道包含两个采样，一个左声道一个右声道）
     size_t totalFrames = totalBytes / description->mBytesPerFrame;
@@ -174,6 +203,8 @@ static AudioStreamBasicDescription makeStreamDescription(int channels, int sampl
     if (!_converter) {
         AudioStreamBasicDescription src = makeStreamDescription(1, description->mSampleRate);
         AudioStreamBasicDescription dst = makeStreamDescription(1, 16000);
+        logPCMFormat(@"converter input", &src);
+        logPCMFormat(@"converter output", &dst);
         _converter = [[TSAudioConverter alloc] initWithSrcFormat:src dstFormat:dst];
     }
     

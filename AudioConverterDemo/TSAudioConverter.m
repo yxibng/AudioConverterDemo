@@ -11,7 +11,6 @@
 
 #define kMaxBufferSize 96000
 
-uint8_t bufferForOutput[kMaxBufferSize];
 uint8_t bufferForInput[kMaxBufferSize];
 
 
@@ -46,6 +45,7 @@ static void writePCM(uint8_t * pcm, int length) {
         AudioConverterDispose(_converterRef);
         _converterRef = nil;
     }
+    TPCircularBufferCleanup(&_buffer);
 }
 
 - (instancetype)initWithSrcFormat:(AudioStreamBasicDescription)srcFormat dstFormat:(AudioStreamBasicDescription)dstForamt
@@ -67,8 +67,8 @@ static void writePCM(uint8_t * pcm, int length) {
 - (void)enqueueAudioData:(uint8_t *)audioData length:(int)length
 {
     bool bRet = TPCircularBufferProduceBytes(&_buffer, audioData, length);
-    if (bRet) {
-        return;
+    if (!bRet) {
+        NSLog(@"TPCircularBufferProduceBytes failed, length = %d", length);
     }
 }
 
@@ -96,40 +96,74 @@ static void writePCM(uint8_t * pcm, int length) {
                  outputLength:(int32_t *)outputLength
             outputSampleCount:(int32_t *)outputSampleCount
 {
+    if (!_converterRef || !srcData || srcLength <= 0 || !outputBuffer || outputBufferSize <= 0 || !outputLength || !outputSampleCount) {
+        return NO;
+    }
+
+    if (_dstFormat.mBytesPerPacket == 0 || _dstFormat.mBytesPerFrame == 0) {
+        return NO;
+    }
+
     //计算转换后的采样个数
     int totalNumbers = floor(_dstFormat.mSampleRate / _srcFormat.mSampleRate * (Float64)srcSampleCount);
+    if (totalNumbers <= 0) {
+        *outputLength = 0;
+        *outputSampleCount = 0;
+        return YES;
+    }
     
     [self enqueueAudioData:srcData length:srcLength];
     
-    UInt32 ioOutputDataPacketSize = totalNumbers;
     UInt32 outputPacketOffset = 0;
+    UInt32 outputByteOffset = 0;
     //循环转换
-    OSStatus convertResult = noErr;
     AudioBufferList outAudioBufferList;
-    while (convertResult == noErr) {
-        memset(bufferForOutput, 0, kMaxBufferSize);
-        outAudioBufferList.mNumberBuffers = 1;
-        outAudioBufferList.mBuffers[0].mNumberChannels = 1;
-        outAudioBufferList.mBuffers[0].mDataByteSize = kMaxBufferSize;
-        outAudioBufferList.mBuffers[0].mData = bufferForOutput;
-        convertResult = AudioConverterFillComplexBuffer(_converterRef,
-                                                        inInputDataProc,
-                                                        (__bridge void * _Nullable)(self),
-                                                        &ioOutputDataPacketSize,
-                                                        &outAudioBufferList,
-                                                        NULL);
+    while (outputPacketOffset < (UInt32)totalNumbers && outputByteOffset < (UInt32)outputBufferSize) {
+        UInt32 remainingPackets = (UInt32)totalNumbers - outputPacketOffset;
+        UInt32 remainingBytes = (UInt32)outputBufferSize - outputByteOffset;
+        UInt32 maxPacketsByBuffer = remainingBytes / _dstFormat.mBytesPerPacket;
+        UInt32 ioOutputDataPacketSize = MIN(remainingPackets, maxPacketsByBuffer);
         if (ioOutputDataPacketSize == 0) {
             break;
         }
+
+        outAudioBufferList.mNumberBuffers = 1;
+        outAudioBufferList.mBuffers[0].mNumberChannels = 1;
+        outAudioBufferList.mBuffers[0].mDataByteSize = remainingBytes;
+        outAudioBufferList.mBuffers[0].mData = outputBuffer + outputByteOffset;
+
+        OSStatus convertResult = AudioConverterFillComplexBuffer(_converterRef,
+                                                                 inInputDataProc,
+                                                                 (__bridge void * _Nullable)(self),
+                                                                 &ioOutputDataPacketSize,
+                                                                 &outAudioBufferList,
+                                                                 NULL);
+
+        if (convertResult != noErr && ioOutputDataPacketSize == 0) {
+            break;
+        }
+        if (convertResult != noErr) {
+            NSLog(@"AudioConverterFillComplexBuffer failed, code = %d", (int)convertResult);
+            return NO;
+        }
+        if (ioOutputDataPacketSize == 0) {
+            break;
+        }
+
+        UInt32 producedBytes = ioOutputDataPacketSize * _dstFormat.mBytesPerPacket;
+        if (producedBytes > outAudioBufferList.mBuffers[0].mDataByteSize) {
+            producedBytes = outAudioBufferList.mBuffers[0].mDataByteSize;
+        }
+
         outputPacketOffset += ioOutputDataPacketSize;
-        memcpy(outputBuffer, outAudioBufferList.mBuffers[0].mData, outAudioBufferList.mBuffers[0].mDataByteSize);
+        outputByteOffset += producedBytes;
 #if 0
         writePCM(outAudioBufferList.mBuffers[0].mData, outAudioBufferList.mBuffers[0].mDataByteSize);
 #endif
     }
     
-    *outputLength = outputPacketOffset * 2;
-    *outputSampleCount = outputPacketOffset;
+    *outputLength = (int32_t)outputByteOffset;
+    *outputSampleCount = (int32_t)(outputByteOffset / _dstFormat.mBytesPerFrame);
     
     return YES;
 }
@@ -138,21 +172,27 @@ static void writePCM(uint8_t * pcm, int length) {
 OSStatus inInputDataProc(AudioConverterRef inAudioConverter, UInt32 *ioNumberDataPackets, AudioBufferList *ioData, AudioStreamPacketDescription **outDataPacketDescription, void *inUserData)
 {
     TSAudioConverter *self = (__bridge TSAudioConverter *)inUserData;
-    int requireSize = *ioNumberDataPackets * self->_dstFormat.mBytesPerPacket;
+    int requireSize = *ioNumberDataPackets * self->_srcFormat.mBytesPerPacket;
+    ioData->mNumberBuffers = 1;
     if (!ioData->mBuffers[0].mData) {
         ioData->mBuffers[0].mData = bufferForInput;
         ioData->mBuffers[0].mNumberChannels = 1;
         memset(bufferForInput, 0, kMaxBufferSize);
-        NSLog(@"buffer = 0");
     }
-    
-    NSLog(@"requireSize = %d", requireSize);
+
+    if (requireSize > kMaxBufferSize) {
+        *ioNumberDataPackets = 0;
+        ioData->mBuffers[0].mDataByteSize = 0;
+        return noErr;
+    }
+
     if ([self dequeueLength:requireSize dstBuffer:ioData->mBuffers[0].mData]) {
         ioData->mBuffers[0].mDataByteSize = requireSize;
         return noErr;
     } else {
         *ioNumberDataPackets = 0;
-        return -1;
+        ioData->mBuffers[0].mDataByteSize = 0;
+        return noErr;
     }
     
     
